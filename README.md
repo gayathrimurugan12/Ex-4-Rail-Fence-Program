@@ -1,25 +1,163 @@
-# Ex-4 Rail-Fence-Program
+                                                                               
+Rail Fence Cipher using with different key values
+## AIM:
+To develop a simple C program to implement Rail Fence Cipher.
+## DESIGN STEPS:
+Step 1: Design of Rail Fence Cipher algorithnm
+Step 2: Implementation using C or pyhton code
+Step 3: Testing algorithm with different key values. ALGORITHM DESCRIPTION: In the rail fence cipher, the plaintext is written downwards and diagonally on successive "rails" of an imaginary fence, then moving up when we reach the bottom rail. When we reach the top rail, the message is written downwards again until the whole plaintext is written out. The message is then read off in rows.
+## PROGRAM:
+```
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
-# IMPLEMENTATION OF RAIL FENCE – ROW & COLUMN TRANSFORMATION TECHNIQUE
+void encrypt(char str[], int rails);
+void decrypt(char str[], int rails);
 
-# AIM:
+int main() {
+    int choice, rails;
+    char str[1000];
 
-# To write a C program to implement the rail fence transposition technique.
+    printf("Enter a Message: ");
+    fgets(str, sizeof(str), stdin);  
+    str[strcspn(str, "\n")] = '\0'; 
 
-# DESCRIPTION:
+    printf("Enter number of rails: ");
+    scanf("%d", &rails);
 
-In the rail fence cipher, the plain text is written downwards and diagonally on successive "rails" of an imaginary fence, then moving up when we reach the bottom rail. When we reach the top rail, the message is written downwards again until the whole plaintext is written out. The message is then read off in rows.
+    printf("Choose an option:\n1. Encrypt\n2. Decrypt\n");
+    scanf("%d", &choice);
 
-# ALGORITHM:
+    if (choice == 1) {
+        encrypt(str, rails);
+    } else if (choice == 2) {
+        decrypt(str, rails);
+    } else {
+        printf("Invalid choice.\n");
+    }
 
-STEP-1: Read the Plain text.
-STEP-2: Arrange the plain text in row columnar matrix format.
-STEP-3: Now read the keyword depending on the number of columns of the plain text.
-STEP-4: Arrange the characters of the keyword in sorted order and the corresponding columns of the plain text.
-STEP-5: Read the characters row wise or column wise in the former order to get the cipher text.
+    return 0;
+}
 
-# PROGRAM
+void encrypt(char str[], int rails) {
+    int i, j, len, count;
+    int code[100][1000]; 
 
-# OUTPUT
+    len = strlen(str);
 
-# RESULT
+    for (i = 0; i < rails; i++) {
+        for (j = 0; j < len; j++) {
+            code[i][j] = 0;
+        }
+    }
+
+    count = 0;  
+    j = 0;      
+
+    while (j < len) {
+        if (count % 2 == 0) {
+            for (i = 0; i < rails && j < len; i++) {
+                code[i][j] = (int)str[j]; 
+                j++;
+            }
+        } else {
+            for (i = rails - 2; i > 0 && j < len; i--) {
+                code[i][j] = (int)str[j]; 
+                j++;
+            }
+        }
+        count++;
+    }
+
+    printf("\nEncrypted Message: ");
+    for (i = 0; i < rails; i++) {
+        for (j = 0; j < len; j++) {
+            if (code[i][j] != 0) {
+                printf("%c", code[i][j]);
+            }
+        }
+    }
+    printf("\n");
+}
+
+void decrypt(char str[], int rails) {
+    int i, j, len, count;
+    int code[100][1000];
+    char decrypted[1000];
+
+    len = strlen(str);
+
+    for (i = 0; i < rails; i++) {
+        for (j = 0; j < len; j++) {
+            code[i][j] = 0;
+        }
+    }
+
+    count = 0;
+    j = 0;
+    int index = 0;
+
+    while (j < len) {
+        if (count % 2 == 0) {
+            for (i = 0; i < rails && j < len; i++) {
+                code[i][j] = 1; 
+                j++;
+            }
+        } else {
+            for (i = rails - 2; i > 0 && j < len; i--) {
+                code[i][j] = 1; 
+                j++;
+            }
+        }
+        count++;
+    }
+
+    for (i = 0; i < rails; i++) {
+        for (j = 0; j < len; j++) {
+            if (code[i][j] == 1) {
+                code[i][j] = (int)str[index++];
+            }
+        }
+    }
+
+    index = 0;
+    j = 0;
+
+    while (j < len) {
+        if (count % 2 == 0) {
+            for (i = 0; i < rails && j < len; i++) {
+                decrypted[j] = (char)code[i][j];
+                j++;
+            }
+        } else {
+            for (i = rails - 2; i > 0 && j < len; i--) {
+                decrypted[j] = (char)code[i][j];
+                j++;
+            }
+        }
+        count++;
+    }
+    decrypted[j] = '\0';
+
+    printf("\nDecrypted Message: %s\n", decrypted);
+}
+
+
+```
+
+
+
+
+
+
+## OUTPUT:
+ ![image](https://github.com/user-attachments/assets/a9dda1b0-3457-4c8e-9e54-c9bd41d7defb)
+
+
+ ![image](https://github.com/user-attachments/assets/dfb96442-ade0-42ea-8256-e8960804344c)
+
+
+## RESULT:
+The program is executed successfully
+
